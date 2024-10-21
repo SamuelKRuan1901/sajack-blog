@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  min-height: 100vh;
+  background-color: #0d0c22;
+  color: white;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-boxing;
+}
+
+input[type=email],
+input[type=password],
+input[type=text],
+textarea{
+  @apply bg-slate-600 p-2 rounded-md
+}
+
+select{
+  @apply bg-slate-600 p-2 rounded-md
+}
