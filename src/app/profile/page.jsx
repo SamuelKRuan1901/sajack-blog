@@ -52,7 +52,7 @@ const ProfilePage = () => {
     setOpenEdit(false);
     setOpenAdminBoard(false)
     setOpenAdd(!openAdd);
-  };
+  };  
   const handleOpenAdminBoard = () => {
     setOpenAdminBoard(!openAdminBoard)
     setOpenEdit(false);

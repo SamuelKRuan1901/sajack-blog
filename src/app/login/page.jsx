@@ -2,22 +2,17 @@
 import Link from "next/link";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
 
   const handleLogin = async (ev) => {
     ev.preventDefault();
     try {
       await signIn("credentials", { email, password });
-      console.log("successed");
-      redirect("/");
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   };
   return (
@@ -43,21 +38,9 @@ const LoginPage = () => {
           Submit
         </button>
       </form>
-      <Link className="text-yellow-200" href={"/register"}>
+      <Link className="text-yellow-200 underline-offset" href={"/register"}>
         Register now ?
       </Link>
-      <div className="w-72 flex flex-col gap-4 mx-auto">
-        or login with Providers
-        <button className="bg-white font-medium text-black p-2 rounded-md">
-          Github
-        </button>
-        <button className="bg-white font-medium text-black p-2 rounded-md">
-          Google
-        </button>
-        <button className="bg-white font-medium text-black p-2 rounded-md">
-          Facebook
-        </button>
-      </div>
     </section>
   );
 };
