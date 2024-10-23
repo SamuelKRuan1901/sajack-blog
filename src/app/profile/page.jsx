@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import EditProfile from "@/components/EditProfile";
 import AddPostForm from "@/components/AddPostForm";
-import AdminBoard from "@/components/AdminBoard";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -26,7 +26,6 @@ const ProfilePage = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Data received:", data);
         setUser(data);
         setIsAdmin(data.isAdmin);
         setProfileFetched(true);
@@ -52,7 +51,7 @@ const ProfilePage = () => {
     setOpenEdit(false);
     setOpenAdminBoard(false)
     setOpenAdd(!openAdd);
-  };
+  };  
   const handleOpenAdminBoard = () => {
     setOpenAdminBoard(!openAdminBoard)
     setOpenEdit(false);
@@ -86,19 +85,15 @@ const ProfilePage = () => {
           Add Blog
         </button>
         {isAdmin && (
-          <button 
-            className="bg-blue-700 p-2 rounded-md"
-            onClick={handleOpenAdminBoard}
-          >
-            Admin Dashboard
-          </button>
+          <Link href={'/admin'} className="bg-blue-700 p-2 rounded-md">
+            Admin
+          </Link>
         )}
       </div>
       <hr />
       <div></div>
       {openEdit && <EditProfile userInfo={user} />}
       {openAdd && <AddPostForm id={user._id} />}
-      {openAdminBoard && <AdminBoard admin={user.isAdmin} />}
     </section>
   );
 };

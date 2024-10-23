@@ -1,12 +1,16 @@
+"use client";
 import AdminPostsBoard from "@/components/AdminPostsBoard";
 import AdminUsersBoard from "@/components/AdminUsersBoard";
 import { Suspense, useEffect, useState } from "react";
-import AddUserForm from "./AddUserForm";
+import AddUserForm from "@/components/AddUserForm";
+import { useSession } from "next-auth/react";
+import AddPostForm from "@/components/AddPostForm";
 
-const AdminBoard = ({admin}) => {
-
+const AdminBoard = () => {
+  const session = useSession();
   const [data, setData] = useState();
-  const [adminFetched, setAdminFetched] = useState(false); 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminFetched, setAdminFetched] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin")
@@ -17,21 +21,25 @@ const AdminBoard = ({admin}) => {
         return response.json();
       })
       .then((data) => {
-        console.log("Data received:", data);
         setData(data);
         setAdminFetched(true);
+        setIsAdmin(data.isAdmin);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
-  },[]);
+  }, []);
 
-  if (!adminFetched) {
+  if (session.status !== "authenticated") {
+    return "Not Allow"
+  }
+
+  if (session.status === "loading" || !adminFetched) {
     return "Loading...";
   }
 
-  if(!admin) {
-    return 'Loading...'
+  if (!isAdmin) {
+    return "Not Allow"
   }
 
   return (
@@ -39,16 +47,16 @@ const AdminBoard = ({admin}) => {
       {/* posts and add post board */}
       <div className="flex gap-10 max-md:flex-col-reverse">
         <Suspense fallback={<div>Loading...</div>}>
-          <AdminPostsBoard posts={data.data.posts}/>
+          <AdminPostsBoard posts={data?.data?.posts} />
+          <AddPostForm id={data._id} />
         </Suspense>
-        {/*  */}
       </div>
       {/* users and add user board */}
       <div className="flex gap-10 max-md:flex-col-reverse">
         <Suspense fallback={<div>Loading...</div>}>
-          <AdminUsersBoard users={data.data.users}/>
-        </Suspense>
-        <AddUserForm />
+          <AdminUsersBoard users={data?.data?.users} />
+          <AddUserForm />
+        </Suspense>    
       </div>
     </div>
   );

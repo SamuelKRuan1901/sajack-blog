@@ -1,5 +1,4 @@
 "use server";
-import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
 import { Post, User } from "./models";
 import bcryptjs from 'bcryptjs';
@@ -20,7 +19,6 @@ export const addPost = async (formData) => {
 
     await newPost.save();
     console.log("saved to db");
-    revalidatePath("/blog");
   } catch (err) {
     console.log(err);
     return { error: "Something went wrong!" };
@@ -39,12 +37,8 @@ export const addUser = async (formData) => {
       password,
       isAdmin
     });
-
     await newUser.save();
-    console.log("saved to db");
-    revalidatePath("/profile");
   } catch (err) {
-    console.log(err);
     return { error: "Something went wrong!" };
   }
 };
@@ -58,7 +52,6 @@ export const changeUserInfo = async (formData) => {
     await User.findByIdAndUpdate({'_id': id}, {'username': username});
     console.log('Username is Updated!');
   } catch (error) {
-    console.log(error);
     return { error: "Something went wrong!" };
   }
 }
@@ -86,7 +79,6 @@ export const changePassword = async (formData) => {
     await User.findByIdAndUpdate({'_id': id}, {'password': hashedPassword});
     console.log('Password is Updated!');
   } catch (error) {
-    console.log(error);
     return { error: "Something went wrong!" };
   }
 }
@@ -97,9 +89,7 @@ export const deletePost = async (formData) => {
     mongoose.connect(process.env.MONGO);
     await Post.findByIdAndDelete({'_id': id});
     console.log('Post is deleted');
-    revalidatePath("/blog");
   } catch (error) {
-    console.log(error);
     return {error: "Something went wrong"}
   }
 }
@@ -110,9 +100,7 @@ export const deleteUser = async (formData) => {
     mongoose.connect(process.env.MONGO);
     await User.findByIdAndDelete({'_id': id});
     console.log('User is deleted');
-    revalidatePath("/profile");
   } catch (error) {
-    console.log(error);
     return {error: "Something went wrong"}
   }
 }
