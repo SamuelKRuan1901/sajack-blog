@@ -26,7 +26,6 @@ const ProfilePage = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Data received:", data);
         setUser(data);
         setIsAdmin(data.isAdmin);
         setProfileFetched(true);
