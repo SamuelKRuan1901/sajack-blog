@@ -1,23 +1,23 @@
-import mongoose from "mongoose";
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { User } from "@/lib/models";
-import bcryptjs from "bcryptjs";
+import mongoose from 'mongoose';
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { User } from '@/lib/models';
+import bcryptjs from 'bcryptjs';
 
 export const authOptions = {
   // Configure one or more authentication providers
   secret: process.env.SECRET,
   providers: [
     CredentialsProvider({
-      name: "Credentials",
-      id: "credentials",
+      name: 'Credentials',
+      id: 'credentials',
       credentials: {
         username: {
-          label: "Email",
-          type: "email",
-          placeholder: "jsmith@example.com",
+          label: 'Email',
+          type: 'email',
+          placeholder: 'jsmith@example.com'
         },
-        password: { label: "Password", type: "password" },
+        password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
@@ -28,20 +28,20 @@ export const authOptions = {
         const user = await User.findOne({ email });
 
         if (!user) {
-          console.log("User does not exist");
+          console.log('User does not exist');
           return null;
         }
 
         const passwordOk = bcryptjs.compareSync(password, user.password);
 
         if (!passwordOk) {
-          console.log("passwords do not match");
+          console.log('passwords do not match');
           return false;
         }
         return user;
-      },
-    }),
-  ],
+      }
+    })
+  ]
 };
 const handler = NextAuth(authOptions);
 

@@ -1,11 +1,11 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import EditProfile from "@/components/EditProfile";
-import AddPostForm from "@/components/AddPostForm";
-import AdminBoard from "@/components/AdminBoard";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+'use client';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import EditProfile from '@/components/EditProfile';
+import AddPostForm from '@/components/AddPostForm';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -18,87 +18,82 @@ const ProfilePage = () => {
   const status = session.status;
 
   useEffect(() => {
-    fetch("/api/profile")
+    fetch('/api/profile')
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error('Network response was not ok');
         }
         return response.json();
       })
       .then((data) => {
-        console.log("Data received:", data);
         setUser(data);
         setIsAdmin(data.isAdmin);
         setProfileFetched(true);
       })
       .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
+        console.error('There was a problem with the fetch operation:', error);
       });
   }, [session, status]);
 
-  if (status === "loading" || !profileFetched) {
-    return "Loading...";
+  if (status === 'loading' || !profileFetched) {
+    return 'Loading...';
   }
 
-  if (status === "unauthenticated") {
-    return redirect("/login");
+  if (status === 'unauthenticated') {
+    return redirect('/login');
   }
   const handleOpenEditForm = () => {
     setOpenEdit(!openEdit);
     setOpenAdd(false);
-    setOpenAdminBoard(false)
+    setOpenAdminBoard(false);
   };
   const handleOpenAddBlogForm = () => {
     setOpenEdit(false);
-    setOpenAdminBoard(false)
+    setOpenAdminBoard(false);
     setOpenAdd(!openAdd);
   };
   const handleOpenAdminBoard = () => {
-    setOpenAdminBoard(!openAdminBoard)
+    setOpenAdminBoard(!openAdminBoard);
     setOpenEdit(false);
     setOpenAdd(false);
   };
 
   return (
-    <section className="px-8 my-14 flex flex-col gap-8">
-      <div className="flex items-center gap-8">
+    <section className='px-8 my-14 flex flex-col gap-8'>
+      <div className='flex items-center gap-8'>
         <Image
-          src={user?.img ? user.img : "/noavatar.png"}
-          alt="avatar"
+          src={user?.img ? user.img : '/noavatar.png'}
+          alt='avatar'
           width={60}
           height={60}
-          className="rounded-full"
+          className='rounded-full'
         />
-        <h1 className="text-3xl font-semibold">{user.username}</h1>
+        <h1 className='text-3xl font-semibold'>{user.username}</h1>
       </div>
       <hr />
-      <div className="flex md:gap-8 gap-3 flex-wrap">
+      <div className='flex md:gap-8 gap-3 flex-wrap'>
         <button
-          className="bg-blue-700 p-2 rounded-md"
+          className='bg-blue-700 p-2 rounded-md'
           onClick={handleOpenEditForm}
         >
           Edit Profile
         </button>
         <button
-          className="bg-blue-700 p-2 rounded-md"
+          className='bg-blue-700 p-2 rounded-md'
           onClick={handleOpenAddBlogForm}
         >
           Add Blog
         </button>
         {isAdmin && (
-          <button 
-            className="bg-blue-700 p-2 rounded-md"
-            onClick={handleOpenAdminBoard}
-          >
-            Admin Dashboard
-          </button>
+          <Link href={'/admin'} className='bg-blue-700 p-2 rounded-md'>
+            Admin
+          </Link>
         )}
       </div>
       <hr />
       <div></div>
       {openEdit && <EditProfile userInfo={user} />}
       {openAdd && <AddPostForm id={user._id} />}
-      {openAdminBoard && <AdminBoard admin={user.isAdmin} />}
     </section>
   );
 };

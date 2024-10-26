@@ -1,13 +1,13 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { User } from "@/lib/models";
-import mongoose from "mongoose";
-import { getServerSession } from "next-auth";
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { User } from '@/lib/models';
+import mongoose from 'mongoose';
+import { getServerSession } from 'next-auth';
 
 export async function GET(req) {
   mongoose.connect(process.env.MONGO);
 
   const url = new URL(req.url);
-  const _id = url.searchParams.get("_id");
+  const _id = url.searchParams.get('_id');
 
   let filterUser = {};
   if (_id) {

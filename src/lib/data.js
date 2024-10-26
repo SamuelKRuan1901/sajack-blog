@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { Post, User } from "./models";
-import { unstable_noStore as noStore } from "next/cache";
+import mongoose from 'mongoose';
+import { Post, User } from './models';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const getPosts = async () => {
   try {
@@ -9,7 +9,7 @@ export const getPosts = async () => {
     return posts;
   } catch (err) {
     console.log(err);
-    throw new Error("Failed to fetch posts!");
+    throw new Error('Failed to fetch posts!');
   }
 };
 
@@ -20,7 +20,7 @@ export const getPost = async (slug) => {
     return post;
   } catch (err) {
     console.log(err);
-    throw new Error("Failed to fetch posts!");
+    throw new Error('Failed to fetch posts!');
   }
 };
 
@@ -31,7 +31,7 @@ export const getUsers = async () => {
     return users;
   } catch (err) {
     console.log(err);
-    throw new Error("Failed to fetch users!");
+    throw new Error('Failed to fetch users!');
   }
 };
 
@@ -43,6 +43,6 @@ export const getUser = async (id) => {
     return user;
   } catch (err) {
     console.log(err);
-    throw new Error("Failed to fetch posts!");
+    throw new Error('Failed to fetch posts!');
   }
 };
