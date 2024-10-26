@@ -17,6 +17,7 @@ const EditProfile = ({ userInfo }) => {
         <input type="password" placeholder="comfirm new password" name='comfirmPassword'/>
         <button className="bg-blue-700 p-2 rounded-md">Change Password</button>
       </form>
+
     </div>
   );
 };

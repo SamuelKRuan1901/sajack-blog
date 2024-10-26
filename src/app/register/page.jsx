@@ -2,6 +2,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -12,17 +14,41 @@ const RegisterPage = () => {
 
   const handleRegister = async (ev) => {
     ev.preventDefault();
+    if(!username) {
+      toast.error('username is required')
+    }
+    if(!email) {
+      toast.error('email is required')
+    }
+    if(!password) {
+      toast.error('password is required')
+    }
     if (password !== passwordConfirm) {
+      toast.error("Confirm Password does not match");
       return false;
     }
 
     try {
-      await fetch("/api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
         body: JSON.stringify({ username, email, password }),
         headers: { "Content-Type": "application/json" },
       });
-      router.push("/login");
+
+      if (res.status === 400) {
+        toast.error("User email already exists");
+      }
+
+      if (res.status === 401) {
+        toast.error("Username already exists");
+      }
+
+      if (res.status === 200) {
+        toast.success("Success in register")
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -69,6 +95,7 @@ const RegisterPage = () => {
           Login here
         </Link>
       </div>
+      <ToastContainer />
     </section>
   );
 };
